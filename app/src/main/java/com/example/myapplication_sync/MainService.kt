@@ -3,16 +3,15 @@ package com.example.myapplication_sync
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 
-class SyncService: Service() {
-
+class MainService : Service() {
     override fun onCreate() {
         super.onCreate()
-//        Debug.waitForDebugger()
-        Util.getTimeZone("SyncService")
+        Util.getTimeZone("MainService")
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent): IBinder? {
         return null
     }
 }

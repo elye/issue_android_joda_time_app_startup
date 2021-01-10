@@ -4,18 +4,15 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentResolver
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.danlew.android.joda.JodaTimeAndroid
-import org.joda.time.DateTimeZone
-import java.util.*
 
 class MainApplication: Application() {
     companion object {
-        const val DEBUG_TRACKING = "TrackDebug"
         const val AUTHORITY = "com.example.myapplication_sync.provider"
         const val ACCOUNT_TYPE = "com.example.myapplication_sync.account"
     }
@@ -35,25 +32,16 @@ class MainApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         JodaTimeAndroid.init(this)
-
-        Log.d(DEBUG_TRACKING, "MainApplication onCreate ${getProcessName()}")
-        try {
-            val x = DeviceTimeZone.get()
-            Log.d(DEBUG_TRACKING, "MainApplication $x")
-        } catch (e: Exception) {
-            Log.d(DEBUG_TRACKING, "MainApplication ${e.localizedMessage}")
-        }
+        Util.getTimeZone("MainApplication")
 
         runBlocking {
             launch (Dispatchers.IO) {
-                try {
-                    val x = DeviceTimeZone.get()
-                    Log.d(DEBUG_TRACKING, "runBlocking $x")
-                } catch (e: Exception) {
-                    Log.d(DEBUG_TRACKING, "runBlocking ${e.localizedMessage}")
-                }
+                Util.getTimeZone("Dispatchers.IO")
             }
         }
+
+        startService(Intent(this, MainService::class.java))
+
         sync()
     }
 
