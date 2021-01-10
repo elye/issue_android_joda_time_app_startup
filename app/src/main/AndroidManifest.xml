@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myapplication_sync">
+
+    <permission
+        android:name="${applicationId}.permission.SYNC_SERVICE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="${applicationId}.permission.ACCOUNT_SERVICE"
+        android:protectionLevel="normal" />
+
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+        android:maxSdkVersion="22" />
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        android:maxSdkVersion="22" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:name=".MainApplication"
+        android:theme="@style/Theme.MyApplication">
+        <activity android:name="com.example.myapplication_sync.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.example.myapplication_sync.AccountService"
+            android:exported="true"
+            android:permission="${applicationId}.permission.ACCOUNT_SERVICE"
+            android:process=":auth">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/account_authenticator" />
+        </service>
+
+        <service android:name="com.example.myapplication_sync.SyncService"
+            android:enabled="true"
+            android:permission="${applicationId}.permission.SYNC_SERVICE"
+            android:process=":sync" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_adaptor" />
+        </service>
+
+    </application>
+
+
+</manifest>
